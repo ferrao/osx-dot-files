@@ -1,0 +1,1 @@
+/Users/ferrao/.config/nvim/init.vim

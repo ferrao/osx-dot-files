@@ -1,0 +1,1 @@
+/Users/ferrao/.zshrc

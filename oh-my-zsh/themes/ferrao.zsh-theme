@@ -1,0 +1,1 @@
+/Users/ferrao/.oh-my-zsh/themes/ferrao.zsh-theme

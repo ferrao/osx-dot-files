@@ -1,0 +1,3 @@
+# OSX Dot Files
+
+A bunch of configuration files that I use on my osx laptop to make my life easier on such a constrained environment...
