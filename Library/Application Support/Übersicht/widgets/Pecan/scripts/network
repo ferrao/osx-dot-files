@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+exists () {
+    type "$1" &> /dev/null ;
+}
+
+echo "↓ $(bash $(dirname "$0")/down) kb/s ↑ $(bash $(dirname "$0")/up) kb/s"

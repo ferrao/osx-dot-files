@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# calculate avaible cpu load
+CPU=`iostat -n0 -d -C -c2 | tail -n 1 | awk '{print $3}'`
+
+# calculate free mem
+FREE_BLOCKS=$(vm_stat | grep free | awk '{ print $3 }' | sed 's/\.//')
+INACTIVE_BLOCKS=$(vm_stat | grep inactive | awk '{ print $3 }' | sed 's/\.//')
+SPECULATIVE_BLOCKS=$(vm_stat | grep speculative | awk '{ print $3 }' | sed 's/\.//')
+
+FREE=$((($FREE_BLOCKS+SPECULATIVE_BLOCKS)*4096/1048576))
+INACTIVE=$(($INACTIVE_BLOCKS*4096/1048576))
+TOTAL=$((($FREE+$INACTIVE)))
+
+MEM_PERCENT=`echo "(16384 - $TOTAL) * 100 / 16384" | bc`%
+CPU_PERCENT=`echo "100 - $CPU" | bc `%
+
+echo $CPU_PERCENT $MEM_PERCENT
