@@ -2,41 +2,125 @@ set nocompatible
 filetype off
 
 call plug#begin()
+
+" sensible vim defaults
 Plug 'tpope/vim-sensible'
+
+" theming
+Plug 'mhinz/vim-startify'
+Plug 'mhartington/oceanic-next'
+Plug 'cocopon/iceberg.vim'
+Plug 'flazz/vim-colorschemes'
+Plug 'ryanoasis/vim-devicons'
+
+" syntax highlights 
 Plug 'othree/html5.vim'
 Plug 'JulesWang/css.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+Plug 'elzr/vim-json'
+Plug 'othree/jsdoc-syntax.vim'
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'Valloric/MatchTagAlways'
+
+" code formatting and auto-completion
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tomtom/tcomment_vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-surround'
+Plug 'sbdchd/neoformat'
+Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
+"Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+
+" file browser
+Plug 'scrooloose/nerdtree'
+
+" terminal
+Plug 'kassio/neoterm'
+
+" search/fuzzy finder
+Plug 'mileszs/ack.vim'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tyok/nerdtree-ack'
+
+" git
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+
+" other
 Plug 'mattn/emmet-vim'
 Plug 'w0rp/ale'
 Plug 'skywind3000/asyncrun.vim'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'mhartington/oceanic-next'
-Plug 'cocopon/iceberg.vim'
-Plug 'flazz/vim-colorschemes'
 Plug 'vim-airline/vim-airline'
-Plug 'Valloric/MatchTagAlways'
-Plug 'ryanoasis/vim-devicons'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'jiangmiao/auto-pairs'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'mileszs/ack.vim'
-Plug 'tyok/nerdtree-ack'
-Plug 'tpope/vim-surround'
-Plug 'airblade/vim-gitgutter'
-Plug 'tomtom/tcomment_vim'
-Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' } 
-Plug 'mhinz/vim-startify'
-Plug 'sbdchd/neoformat'
-Plug 'tpope/vim-fugitive'
 call plug#end()
 
 " tab as 4 spaces or die
-set ts=4 sw=4
-set number
-set mouse=a " we can actually select&copy with the mouse after this... 
+set autoindent
+set tabstop=4 " 4 spaces as soft tab
+set shiftwidth=4 " number of spaces to use for autoindent
+set shiftround " round indent to multiples of shiftwidth
+set expandtab " insert tab with the right amount of spacing
+set wrap
+set textwidth=120
+set formatoptions=qrn1
+set colorcolumn=80 " visual indicator of 80 column
+
+" usefull stuff 
+set nocompatible " all in on vim
+set ttyfast " should make scrolling faster
+set lazyredraw " should make scrolling faster
+set mouse=a " we can actually resize, select and copy with the mouse
+set number  " show line numbers 
+set numberwidth=1  " show line numbers 
+set showcmd " show incomplete commands 
+set laststatus=2 " always display the status line
+set autowrite " write before running commands
+set ignorecase " ignore case when searching
+set smartcase " but use case sensitive if a capital letter is present
+set noshowmode " no need to show mode, airline takes care of that
+set scrolloff=3 " display some extra lines at the bottom
+set hidden " enable hidden unsaved buffers 
+set wildmenu " enable wildmenu
+set wildmode=list:longest,list:full " configure wildmenu 
+set visualbell " visual bell for errors
+set cursorline " highlight the line where the cursor is
+set ruler
+set backspace=indent,eol,start
+set relativenumber
+set undofile
+
+" swap file and undo/backup files
+set backupdir=~/.vim/tmp
+set directory=~/.vim/tmp
+
+" terminal
+set termguicolors " enable true colors
+let $GIT_EDITOR = 'nvr -cc split --remote-wait'
+let $EDITOR = 'nvr -l' " prevent nested vim editors inside the temrinal
+tnoremap <silent> <leader><esc> <C-\><C-n><esc><CR> 
+nnoremap <silent> <leader>t :vertical botright Ttoggle<CR><C-w>l
+
+" theme
+syntax enable " enable syntax highlight
+set background=dark " default background is dark
+colorscheme iceberg " default theme 
+let g:airline_theme='iceberg' " default airline theme
+hi Comment gui=italic cterm=italic term=italic
+let g:javascript_plugin_jsdoc = 1
+
+" change theme to Light
+function! PresentationMode()
+    colorscheme Atelier_SavannaLight
+    set background=light
+endfunction
+" change theme to default dark mode 
+function! NormalMode()
+    set background=dark
+    colorscheme iceberg
+endfunction
+nmap <leader>PR :call PresentationMode()<CR>
+nmap <leader>PP :call NormalMode()<CR>
 
 " jsx
 let g:jsx_ext_required = 1
@@ -66,59 +150,44 @@ autocmd BufWritePost *.js,*.jsx AsyncRun -post=checktime ./node_modules/.bin/pre
 " file browser
 nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
 nnoremap <silent> <Leader>f :NERDTreeFind<Enter>
-let NERDTreeQuitOnOpen=1
+let NERDTreeQuitOnOpen=0
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 
-" theme
-if (has("termguicolors"))
-  set termguicolors
-endif
-syntax enable
-set background=dark
-colorscheme iceberg
-let g:oceanic_next_terminal_bold = 1
-let g:oceanic_next_terminal_italic = 1
-let g:airline_theme='iceberg'
-hi htmlTagName guifg=#c0c5ce ctermfg=251
-hi htmlEndTag guifg=#c0c5ce ctermfg=251
-hi Comment gui=italic cterm=italic term=italic
-let g:javascript_plugin_jsdoc = 1
 
 " code folding
-set foldmethod=syntax
-set foldcolumn=1
 let javascript_fold=1
+set foldmethod=manual
+set foldcolumn=1
 set foldlevelstart=99
+let g:markdown_fenced_languages = ['html', 'js=javascript', 'json', 'bash=sh']
 
 " auto completion
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" Automatically start language servers.
+"let g:LanguageClient_autoStart = 1
+
 "let g:deoplete#disable_auto_complete = 1
-let g:deoplete#enable_at_startup = 1
-if !exists('g:deoplete#omni#input_patterns')
-	let g:deoplete#omni#input_patterns = {}
-endif
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+" let g:deoplete#enable_at_startup = 1
+" if !exists('g:deoplete#omni#input_patterns')
+" 	let g:deoplete#omni#input_patterns = {}
+" endif
+" autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " omnifuncs
-augroup omnifuncs
-  autocmd!
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-augroup end
-
-" tern
-let g:tern_show_argument_hints = 'on_hold'
-let g:tern_show_signature_in_pum = 1
-autocmd FileType javascript setlocal omnifunc=tern#Complete
-autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+" augroup omnifuncs
+"   autocmd!
+"   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+"   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+"   autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" augroup end
 
 " multiple windows
-set splitbelow " used by sp command
-set splitright " used by vsp command 
+set splitbelow " used by split command
+set splitright " used by vsplit command 
+
 " Faster move between windows using alt-dir keys
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -133,7 +202,11 @@ nnoremap <m-_> :exe "resize " . (winheight(0) * 3/4)<CR>
 
 " Fuzzy finder
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard'] " ignore files in .gitignore
+nnoremap <leader>a :Ack
 
 " Start screen
 let g:startify_session_persistence = 1
 let g:startify_fortune_use_unicode = 1
+
+
+

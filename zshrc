@@ -98,7 +98,9 @@ export LANG=en_US.UTF-8
 #else
 #  export EDITOR='mvim'
 #fi
-export EDITOR="vim"
+if [ -z "$EDITOR" ]; then
+    export EDITOR="vim"
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -126,5 +128,6 @@ alias ssh='kitty +kitten ssh'
 alias code='/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code'
 alias vim='nvim'
 alias vimconfig='vim ~/.config/nvim/init.vim'
+alias e=$EDITOR
 
 eval "$(jenv init -)"
