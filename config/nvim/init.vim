@@ -8,6 +8,7 @@ Plug 'tpope/vim-sensible'
 
 " theming
 Plug 'mhinz/vim-startify'
+Plug 'vim-airline/vim-airline'
 Plug 'mhartington/oceanic-next'
 Plug 'cocopon/iceberg.vim'
 Plug 'flazz/vim-colorschemes'
@@ -24,13 +25,16 @@ Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'Valloric/MatchTagAlways'
 
 " code formatting and auto-completion
+Plug 'w0rp/ale'
+Plug 'skywind3000/asyncrun.vim'
+Plug 'mattn/emmet-vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'sbdchd/neoformat'
+Plug 'autozimu/LanguageClient-neovim', { 'do': 'bash install.sh'}
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
-"Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 
 " file browser
 Plug 'scrooloose/nerdtree'
@@ -40,19 +44,15 @@ Plug 'kassio/neoterm'
 
 " search/fuzzy finder
 Plug 'mileszs/ack.vim'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tyok/nerdtree-ack'
+Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'junegunn/fzf'
 
 " git
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
-" other
-Plug 'mattn/emmet-vim'
-Plug 'w0rp/ale'
-Plug 'skywind3000/asyncrun.vim'
-Plug 'vim-airline/vim-airline'
 call plug#end()
 
 " tab as 4 spaces or die
@@ -67,6 +67,7 @@ set formatoptions=qrn1
 set colorcolumn=80 " visual indicator of 80 column
 
 " usefull stuff 
+filetype plugin on
 set nocompatible " all in on vim
 set ttyfast " should make scrolling faster
 set lazyredraw " should make scrolling faster
@@ -163,26 +164,25 @@ set foldlevelstart=99
 let g:markdown_fenced_languages = ['html', 'js=javascript', 'json', 'bash=sh']
 
 " auto completion
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-" Automatically start language servers.
-"let g:LanguageClient_autoStart = 1
-
+let g:deoplete#enable_at_startup = 1 " turn on deoplete
 "let g:deoplete#disable_auto_complete = 1
-" let g:deoplete#enable_at_startup = 1
-" if !exists('g:deoplete#omni#input_patterns')
-" 	let g:deoplete#omni#input_patterns = {}
-" endif
-" autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+"" use tab and shift-tab to scroll through suggestions, esc to close popup
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>" 
+inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" omnifuncs
-" augroup omnifuncs
-"   autocmd!
-"   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-"   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-"   autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-"   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-" augroup end
+" use language server
+let g:LanguageClient_autoStart = 1  " Automatically start language servers
+let g:LanguageClient_serverCommands = {
+    \ 'javascript': ['javascript-typescript-stdio', '-l', '~/.vim/lsp.log'],
+    \ 'javascript.jsx': ['javascript-typescript-stdio', '-l', '~/.vim/lsp.log']
+    \ }
+
+autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
+autocmd FileType javascript setlocal completefunc=LanguageClient#complete
+noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
+noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
+noremap <silent> R :call LanguageClient_textDocument_rename()<CR>
+noremap <silent> S :call LanguageClient_textDocument_documentSymbol()<CR>
 
 " multiple windows
 set splitbelow " used by split command
@@ -207,6 +207,3 @@ nnoremap <leader>a :Ack
 " Start screen
 let g:startify_session_persistence = 1
 let g:startify_fortune_use_unicode = 1
-
-
-
