@@ -33,7 +33,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'sbdchd/neoformat'
-Plug 'autozimu/LanguageClient-neovim', { 'do': 'bash install.sh'}
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh'}
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
 
 " file browser
@@ -45,8 +45,8 @@ Plug 'kassio/neoterm'
 " search/fuzzy finder
 Plug 'mileszs/ack.vim'
 Plug 'tyok/nerdtree-ack'
-Plug 'ctrlpvim/ctrlp.vim'
-"Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 " git
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -72,6 +72,7 @@ set nocompatible " all in on vim
 set ttyfast " should make scrolling faster
 set lazyredraw " should make scrolling faster
 set mouse=a " we can actually resize, select and copy with the mouse
+set clipboard=unnamed " required for integration with osx clipboard
 set number  " show line numbers 
 set numberwidth=1  " show line numbers 
 set showcmd " show incomplete commands 
@@ -81,7 +82,7 @@ set ignorecase " ignore case when searching
 set smartcase " but use case sensitive if a capital letter is present
 set noshowmode " no need to show mode, airline takes care of that
 set scrolloff=3 " display some extra lines at the bottom
-set hidden " enable hidden unsaved buffers 
+set hidden " enable hidden unsaved buffers, required for LSP rename
 set wildmenu " enable wildmenu
 set wildmode=list:longest,list:full " configure wildmenu 
 set visualbell " visual bell for errors
@@ -90,6 +91,7 @@ set ruler
 set backspace=indent,eol,start
 set relativenumber
 set undofile
+set autoread
 
 " swap file and undo/backup files
 set backupdir=~/.vim/tmp
@@ -124,8 +126,12 @@ nmap <leader>PR :call PresentationMode()<CR>
 nmap <leader>PP :call NormalMode()<CR>
 
 " jsx
-let g:jsx_ext_required = 1
-let g:mta_filetypes = { 'javascript.jsx' : 1 }
+"" For strict usage in jsx files 
+"let g:jsx_ext_required = 1
+"let g:mta_filetypes = { 'javascript.jsx' : 1 }
+"" More relaxed settings
+let g:jsx_ext_required = 0
+let g:mta_filetypes = { 'javascript.jsx' : 1, 'javascript': 1 }
 
 " emmet-vim
 "let g:user_emmet_leader_key='<C-M>'
@@ -151,7 +157,7 @@ autocmd BufWritePost *.js,*.jsx AsyncRun -post=checktime ./node_modules/.bin/pre
 " file browser
 nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
 nnoremap <silent> <Leader>f :NERDTreeFind<Enter>
-let NERDTreeQuitOnOpen=0
+let NERDTreeQuitOnOpen=0 " leave NERDTree open after opening file
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 
@@ -163,10 +169,10 @@ set foldcolumn=1
 set foldlevelstart=99
 let g:markdown_fenced_languages = ['html', 'js=javascript', 'json', 'bash=sh']
 
-" auto completion
+" auto completion with deoplete and LSP
 let g:deoplete#enable_at_startup = 1 " turn on deoplete
-"let g:deoplete#disable_auto_complete = 1
-"" use tab and shift-tab to scroll through suggestions, esc to close popup
+
+"use tab and shift-tab to scroll through suggestions, esc to close popup
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>" 
 inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
@@ -179,10 +185,12 @@ let g:LanguageClient_serverCommands = {
 
 autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
 autocmd FileType javascript setlocal completefunc=LanguageClient#complete
-noremap <silent> H :call LanguageClient_textDocument_hover()<CR>
-noremap <silent> Z :call LanguageClient_textDocument_definition()<CR>
-noremap <silent> R :call LanguageClient_textDocument_rename()<CR>
-noremap <silent> S :call LanguageClient_textDocument_documentSymbol()<CR>
+nnoremap <silent> <leader>m :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> <leader>h :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <leader>fr :call LanguageClient_textDocument_references()<CR>
+nnoremap <silent> <leader>r :call LanguageClient_textDocument_rename()<CR>
+nnoremap <silent> <leader>s :call LanguageClient_textDocument_documentSymbol()<CR>
 
 " multiple windows
 set splitbelow " used by split command
@@ -200,10 +208,12 @@ nnoremap <m-+> :exe "resize " . (winheight(0) * 4/3)<CR>
 nnoremap <m--> :exe "resize " . (winheight(0) * 3/4)<CR>
 nnoremap <m-_> :exe "resize " . (winheight(0) * 3/4)<CR>
 
-" Fuzzy finder
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard'] " ignore files in .gitignore
+" Finders
 nnoremap <leader>a :Ack
 
 " Start screen
 let g:startify_session_persistence = 1
 let g:startify_fortune_use_unicode = 1
+
+" Highlight keywords in comments like TODO, FIXME, WARNING, NOTE
+autocmd VimEnter * :silent! call matchadd('Todo', 'TODO\|FIXME\|WARNING\|NOTE\|Plugin:', -1)
