@@ -26,13 +26,11 @@ Plug 'Valloric/MatchTagAlways'
 
 " code formatting and auto-completion
 Plug 'w0rp/ale'
-Plug 'skywind3000/asyncrun.vim'
 Plug 'mattn/emmet-vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
-Plug 'sbdchd/neoformat'
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh'}
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
 
@@ -146,13 +144,20 @@ let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " formatter
-let g:neoformat_try_formatprg = 1
-
-" fix code on save, requires prettier-eslint-cli
-autocmd BufWritePre *.js,*.jsx,*.json Neoformat
-" waiting for https://github.com/prettier/prettier-eslint/pull/194
-"let g:neoformat_javascript_prettier = { 'exe': './node_modules/.bin/prettier-eslint', 'args': ['--stdin'], 'stdin': 1 }
-autocmd BufWritePost *.js,*.jsx AsyncRun -post=checktime ./node_modules/.bin/prettier-eslint --write %
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {
+      \  'javascript': ['prettier', 'eslint'],
+      \  'jsx': ['prettier', 'eslint'],
+      \  'flow': ['prettier'],
+      \  'typescript': ['prettier'],
+      \  'css': ['prettier'],
+      \  'less': ['prettier'],
+      \  'scss': ['prettier'],
+      \  'json': ['prettier'],
+      \  'graphql': ['prettier'],
+      \  'markdown': ['prettier'],
+             \ }
+let g:ale_javascript_prettier_options = '--print-width 100 --tab-width 4 --single-quote'
 
 " file browser
 nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
@@ -160,7 +165,6 @@ nnoremap <silent> <Leader>f :NERDTreeFind<Enter>
 let NERDTreeQuitOnOpen=0 " leave NERDTree open after opening file
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-
 
 " code folding
 let javascript_fold=1
