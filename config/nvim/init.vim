@@ -182,12 +182,18 @@ inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " use language server
 let g:LanguageClient_autoStart = 1  " Automatically start language servers
+let g:LanguageClient_loadSettings = 1
+let g:LanguageClient_changeThrottle = 0.5 " Delay before sending text changes to server
+let g:LanguageClient_trace = 'verbose'
+let g:LanguageClient_loggingFile = expand('~/.vim/LanguageClient.log') 
+let g:LanguageClient_serverStderr = expand('~/.vim/LanguageServer.log')
+let g:LanguageClient_loggingLevel = 'WARN' " DEBUG|INFO||WARN|ERROR
+let g:LanguageClient_waitOutputTimeout = 3 " timeout if server does not respond in 3s 
 let g:LanguageClient_serverCommands = {
     \ 'javascript': ['javascript-typescript-stdio', '-l', '~/.vim/lsp.log'],
     \ 'javascript.jsx': ['javascript-typescript-stdio', '-l', '~/.vim/lsp.log']
     \ }
 
-autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
 autocmd FileType javascript setlocal completefunc=LanguageClient#complete
 nnoremap <silent> <leader>m :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> <leader>h :call LanguageClient_textDocument_hover()<CR>
