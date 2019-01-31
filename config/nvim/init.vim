@@ -22,6 +22,7 @@ Plug 'mxw/vim-jsx'
 Plug 'elzr/vim-json'
 Plug 'othree/jsdoc-syntax.vim'
 Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'Valloric/MatchTagAlways'
 
 " code formatting and auto-completion
@@ -224,6 +225,7 @@ nnoremap <leader>a :Ack
 " Start screen
 let g:startify_session_persistence = 1
 let g:startify_fortune_use_unicode = 1
+let g:startify_session_dir = '~/.vim/session'
 
 " Highlight keywords in comments like TODO, FIXME, WARNING, NOTE
 autocmd VimEnter * :silent! call matchadd('Todo', 'TODO\|FIXME\|WARNING\|NOTE\|Plugin:', -1)
