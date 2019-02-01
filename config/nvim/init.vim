@@ -42,8 +42,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'kassio/neoterm'
 
 " search/fuzzy finder
-Plug 'mileszs/ack.vim'
-Plug 'tyok/nerdtree-ack'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
@@ -133,7 +131,7 @@ let g:jsx_ext_required = 0
 let g:mta_filetypes = { 'javascript.jsx' : 1, 'javascript': 1 }
 
 " emmet-vim
-"let g:user_emmet_leader_key='<C-M>'
+let g:user_emmet_leader_key='<C-e>' " leader + comma(,) expands emmet
 let g:user_emmet_settings = { 'javascript.jsx' : { 'extends' : 'jsx' } }
 
 " linter
@@ -166,6 +164,8 @@ nnoremap <silent> <Leader>f :NERDTreeFind<Enter>
 let NERDTreeQuitOnOpen=0 " leave NERDTree open after opening file
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+autocmd VimLeave * NERDTreeClose
+
 
 " code folding
 let javascript_fold=1
@@ -219,10 +219,22 @@ nnoremap <m-+> :exe "resize " . (winheight(0) * 4/3)<CR>
 nnoremap <m--> :exe "resize " . (winheight(0) * 3/4)<CR>
 nnoremap <m-_> :exe "resize " . (winheight(0) * 3/4)<CR>
 
-" Finders
-nnoremap <leader>a :Ack
+" Search/Finders
+let $FZF_DEFAULT_COMMAND = 'ag --ignore-case --depth -1 -g ""'
+let g:fzf_layout = { 'window': '10split enew' }
+nnoremap <C-p> :Files<CR> 
+"" shortcut for fzf but preventing new file to open inside nerd tree buffer
+nnoremap <expr> <C-s> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Ag<space>"
+let g:fzf_action = {
+    \ '': 'vsplit', 
+    \ 'ctrl-t': 'tab split',
+    \ 'ctrl-x': 'split',
+    \ 'ctrl-v': 'vsplit' }
 
+"
 " Start screen
+let g:startify_change_to_dir = 0
+let g:startify_change_to_vcs_root = 1
 let g:startify_session_persistence = 1
 let g:startify_fortune_use_unicode = 1
 let g:startify_session_dir = '~/.vim/session'
