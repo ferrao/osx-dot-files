@@ -220,6 +220,8 @@ nnoremap <m--> :exe "resize " . (winheight(0) * 3/4)<CR>
 nnoremap <m-_> :exe "resize " . (winheight(0) * 3/4)<CR>
 
 " Search/Finders
+"" clear search highlight on esc
+nnoremap <esc> :noh<return><esc> 
 let $FZF_DEFAULT_COMMAND = 'ag --ignore-case --depth -1 -g ""'
 let g:fzf_layout = { 'window': '10split enew' }
 nnoremap <C-p> :Files<CR> 
