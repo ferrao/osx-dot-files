@@ -221,7 +221,7 @@ nnoremap <m-_> :exe "resize " . (winheight(0) * 3/4)<CR>
 
 " Search/Finders
 "" clear search highlight on esc
-nnoremap <esc> :noh<return><esc> 
+nnoremap <silent> <esc> :noh<return><esc> 
 let $FZF_DEFAULT_COMMAND = 'ag --ignore-case --depth -1 -g ""'
 let g:fzf_layout = { 'window': '10split enew' }
 nnoremap <C-p> :Files<CR> 
@@ -235,11 +235,22 @@ let g:fzf_action = {
 
 "
 " Start screen
+let g:startify_session_autoload = 1
 let g:startify_change_to_dir = 0
 let g:startify_change_to_vcs_root = 1
 let g:startify_session_persistence = 1
 let g:startify_fortune_use_unicode = 1
 let g:startify_session_dir = '~/.vim/session'
+let g:startify_list_order = [
+      \ ['   Sessions:'],
+      \ 'sessions',
+      \ ['   Last recently opened files'],
+      \ 'files',
+      \ ['   Last recently modified files in the current directory:'],
+      \ 'dir',
+      \ ['   Bookmarks:'],
+      \ 'bookmarks',
+      \ ]
 
 " Highlight keywords in comments like TODO, FIXME, WARNING, NOTE
 autocmd VimEnter * :silent! call matchadd('Todo', 'TODO\|FIXME\|WARNING\|NOTE\|Plugin:', -1)
