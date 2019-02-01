@@ -156,7 +156,7 @@ let g:ale_fixers = {
       \  'graphql': ['prettier'],
       \  'markdown': ['prettier'],
              \ }
-let g:ale_javascript_prettier_options = '--print-width 100 --tab-width 4 --single-quote'
+let g:ale_javascript_prettier_options = '--print-width 120 --tab-width 4 --single-quote'
 
 " file browser
 nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
