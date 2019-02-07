@@ -18,6 +18,7 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'othree/html5.vim'
 Plug 'JulesWang/css.vim'
 Plug 'pangloss/vim-javascript'
+"Plug 'othree/yajs.vim' " alternative js syntax plugin, not working well for me
 Plug 'mxw/vim-jsx'
 Plug 'elzr/vim-json'
 Plug 'othree/jsdoc-syntax.vim'
@@ -86,7 +87,7 @@ set visualbell " visual bell for errors
 set cursorline " highlight the line where the cursor is
 set ruler
 set backspace=indent,eol,start
-set relativenumber
+set relativenumber " makes file navigation so easy...
 set undofile
 set autoread
 
@@ -126,7 +127,7 @@ nmap <leader>PP :call NormalMode()<CR>
 "" For strict usage in jsx files 
 "let g:jsx_ext_required = 1
 "let g:mta_filetypes = { 'javascript.jsx' : 1 }
-"" More relaxed settings
+"" More JSX relaxed settings
 let g:jsx_ext_required = 0
 let g:mta_filetypes = { 'javascript.jsx' : 1, 'javascript': 1 }
 
@@ -159,13 +160,14 @@ let g:ale_fixers = {
 let g:ale_javascript_prettier_options = '--print-width 120 --tab-width 4 --single-quote'
 
 " file browser
-nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
+"nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
+nnoremap <silent><expr> <Leader><Space> g:NERDTree.IsOpen() ? ":NERDTreeClose\<CR>" : ":NERDTree\<CR>"
+
 nnoremap <silent> <Leader>f :NERDTreeFind<Enter>
 let NERDTreeQuitOnOpen=0 " leave NERDTree open after opening file
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 autocmd VimLeave * NERDTreeClose
-
 
 " code folding
 let javascript_fold=1
