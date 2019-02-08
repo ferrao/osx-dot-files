@@ -25,6 +25,7 @@ Plug 'othree/jsdoc-syntax.vim'
 Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'Valloric/MatchTagAlways'
+Plug 'lilydjwg/colorizer'
 
 " code formatting and auto-completion
 Plug 'w0rp/ale'
@@ -85,6 +86,7 @@ set wildmenu " enable wildmenu
 set wildmode=list:longest,list:full " configure wildmenu 
 set visualbell " visual bell for errors
 set cursorline " highlight the line where the cursor is
+set cursorcolumn " highlight the column where the cursor is
 set ruler
 set backspace=indent,eol,start
 set relativenumber " makes file navigation so easy...
@@ -108,6 +110,7 @@ set background=dark " default background is dark
 colorscheme iceberg " default theme 
 let g:airline_theme='iceberg' " default airline theme
 hi Comment gui=italic cterm=italic term=italic
+let g:colorizer_maxlines = 1000 " does not work well with large files
 let g:javascript_plugin_jsdoc = 1
 
 " change theme to Light
@@ -167,13 +170,17 @@ nnoremap <silent> <Leader>f :NERDTreeFind<Enter>
 let NERDTreeQuitOnOpen=0 " leave NERDTree open after opening file
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let g:WebDevIconsNerdTreeBeforeGlyphPadding = ""
+let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
+let g:NERDTreeDirArrowExpandable = "\u00a0"
+let g:NERDTreeDirArrowCollapsible = "\u00a0"
+autocmd FileType nerdtree setlocal signcolumn=no
 autocmd VimLeave * NERDTreeClose
 
 " code folding
 let javascript_fold=1
-set foldmethod=manual
-set foldcolumn=1
-set foldlevelstart=99
+set foldmethod=indent
+set foldlevelstart=20
 let g:markdown_fenced_languages = ['html', 'js=javascript', 'json', 'bash=sh']
 
 " auto completion with deoplete and LSP
@@ -227,6 +234,8 @@ nnoremap <silent> <esc> :noh<return><esc>
 let $FZF_DEFAULT_COMMAND = 'ag --ignore-case --depth -1 -g ""'
 let g:fzf_layout = { 'window': '10split enew' }
 nnoremap <C-p> :Files<CR> 
+cnoremap W w
+"
 "" shortcut for fzf but preventing new file to open inside nerd tree buffer
 nnoremap <expr> <C-s> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Ag<space>"
 let g:fzf_action = {
