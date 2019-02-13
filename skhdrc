@@ -84,7 +84,7 @@
 # ]
 
 # restart chunkwm
-alt - r : brew services restart chunkwm;\
+shift + alt - r : brew services restart chunkwm;\
 		  brew services restart skhd
 
 # open terminal, blazingly fast compared to iTerm/Hyper
