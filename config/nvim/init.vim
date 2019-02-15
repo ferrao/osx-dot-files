@@ -93,6 +93,10 @@ set relativenumber " makes file navigation so easy...
 set undofile
 set autoread
 
+" set gf file paths
+set path=.,src,lib,node_nodules
+set suffixesadd=.js,.jsx
+
 " swap file and undo/backup files
 set backupdir=~/.vim/tmp
 set directory=~/.vim/tmp
@@ -160,7 +164,7 @@ let g:ale_fixers = {
       \  'graphql': ['prettier'],
       \  'markdown': ['prettier'],
              \ }
-let g:ale_javascript_prettier_options = '--print-width 120 --tab-width 4 --single-quote'
+let g:ale_javascript_prettier_options = '--print-width 100 --tab-width 4 --single-quote'
 
 " file browser
 "nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
@@ -195,6 +199,7 @@ let g:LanguageClient_autoStart = 1  " Automatically start language servers
 let g:LanguageClient_loadSettings = 1
 let g:LanguageClient_changeThrottle = 0.5 " Delay before sending text changes to server
 let g:LanguageClient_trace = 'verbose'
+let g:LanguageClient_loadSettings=expand('~./.vim/settings.json')
 let g:LanguageClient_loggingFile = expand('~/.vim/LanguageClient.log') 
 let g:LanguageClient_serverStderr = expand('~/.vim/LanguageServer.log')
 let g:LanguageClient_loggingLevel = 'WARN' " DEBUG|INFO||WARN|ERROR
@@ -233,9 +238,12 @@ nnoremap <m-_> :exe "resize " . (winheight(0) * 3/4)<CR>
 nnoremap <silent> <esc> :noh<return><esc> 
 let $FZF_DEFAULT_COMMAND = 'ag --ignore-case --depth -1 -g ""'
 let g:fzf_layout = { 'window': '10split enew' }
+"" makes fzf look like ctrlp replacement
 nnoremap <C-p> :Files<CR> 
-cnoremap W w
-"
+"" avoid common mistake of opening fzf when saving file
+cnoremap W<CR> w<CR>
+
+ 
 "" shortcut for fzf but preventing new file to open inside nerd tree buffer
 nnoremap <expr> <C-s> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Ag<space>"
 let g:fzf_action = {
