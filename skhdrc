@@ -231,7 +231,7 @@ alt - y : chunkc tiling::desktop --mirror vertical
 alt - x : chunkc tiling::desktop --mirror horizontal
 
 # toggle desktop offset
-alt - a : chunkc tiling::desktop --toggle offset
+#alt - a : chunkc tiling::desktop --toggle offset
 
 # toggle window fullscreen
 alt - m : chunkc tiling::window --toggle fullscreen
@@ -240,7 +240,7 @@ alt - m : chunkc tiling::window --toggle fullscreen
 shift + alt - m : chunkc tiling::window --toggle native-fullscreen
 
 # toggle window parent zoom
-alt - d : chunkc tiling::window --toggle parent
+#alt - d : chunkc tiling::window --toggle parent
 
 # toggle window split type
 alt - e : chunkc tiling::window --toggle split
