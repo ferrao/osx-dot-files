@@ -34,8 +34,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh'}
-Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " file browser
 Plug 'scrooloose/nerdtree'
@@ -51,6 +50,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
+Plug 'zivyangll/git-blame.vim'
 
 call plug#end()
 
@@ -61,7 +61,7 @@ set shiftwidth=4 " number of spaces to use for autoindent
 set shiftround " round indent to multiples of shiftwidth
 set expandtab " insert tab with the right amount of spacing
 set wrap
-set textwidth=120
+set textwidth=100
 set formatoptions=qrn1
 set colorcolumn=80 " visual indicator of 80 column
 
@@ -108,6 +108,9 @@ let $EDITOR = 'nvr -l' " prevent nested vim editors inside the temrinal
 tnoremap <silent> <leader><esc> <C-\><C-n><esc><CR> 
 nnoremap <silent> <leader>t :vertical botright Ttoggle<CR><C-w>l
 
+" git
+nnoremap <leader>g :<C-u>call gitblame#echo()<CR>
+
 " theme
 syntax enable " enable syntax highlight
 set background=dark " default background is dark
@@ -119,7 +122,7 @@ let g:javascript_plugin_jsdoc = 1
 
 " change theme to Light
 function! PresentationMode()
-    colorscheme Atelier_SavannaLight
+    colorscheme Light
     set background=light
 endfunction
 " change theme to default dark mode 
@@ -132,18 +135,16 @@ nmap <leader>PP :call NormalMode()<CR>
 
 " jsx
 "" For strict usage in jsx files 
-"let g:jsx_ext_required = 1
-"let g:mta_filetypes = { 'javascript.jsx' : 1 }
 "" More JSX relaxed settings
 let g:jsx_ext_required = 0
 let g:mta_filetypes = { 'javascript.jsx' : 1, 'javascript': 1 }
 
 " emmet-vim
-let g:user_emmet_leader_key='<C-e>' " leader + comma(,) expands emmet
+let g:user_emmet_leader_key='<C-e>' " Ctrl + e + (,) expands emmet
 let g:user_emmet_settings = { 'javascript.jsx' : { 'extends' : 'jsx' } }
 
 " linter
-let g:ale_linters = {'javascript': ['eslint'], 'javascript.jsx': ['eslint'], 'json': ['eslint'] }
+let g:ale_linters = {'javascript': ['eslint'], 'javascript.jsx': ['eslint'], 'json': ['eslint'], 'html': ['eslint'] }
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
 let g:airline_powerline_fonts = 1
@@ -163,13 +164,11 @@ let g:ale_fixers = {
       \  'json': ['prettier'],
       \  'graphql': ['prettier'],
       \  'markdown': ['prettier'],
+      \  'html': ['prettier']
              \ }
-let g:ale_javascript_prettier_options = '--print-width 100 --tab-width 4 --single-quote'
 
 " file browser
-"nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
-nnoremap <silent><expr> <Leader><Space> g:NERDTree.IsOpen() ? ":NERDTreeClose\<CR>" : ":NERDTree\<CR>"
-
+nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
 nnoremap <silent> <Leader>f :NERDTreeFind<Enter>
 let NERDTreeQuitOnOpen=0 " leave NERDTree open after opening file
 let NERDTreeMinimalUI = 1
@@ -186,36 +185,6 @@ let javascript_fold=1
 set foldmethod=indent
 set foldlevelstart=20
 let g:markdown_fenced_languages = ['html', 'js=javascript', 'json', 'bash=sh']
-
-" auto completion with deoplete and LSP
-let g:deoplete#enable_at_startup = 1 " turn on deoplete
-
-"use tab and shift-tab to scroll through suggestions, esc to close popup
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>" 
-inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" use language server
-let g:LanguageClient_autoStart = 1  " Automatically start language servers
-let g:LanguageClient_loadSettings = 1
-let g:LanguageClient_changeThrottle = 0.5 " Delay before sending text changes to server
-let g:LanguageClient_trace = 'verbose'
-let g:LanguageClient_loadSettings=expand('~./.vim/settings.json')
-let g:LanguageClient_loggingFile = expand('~/.vim/LanguageClient.log') 
-let g:LanguageClient_serverStderr = expand('~/.vim/LanguageServer.log')
-let g:LanguageClient_loggingLevel = 'WARN' " DEBUG|INFO||WARN|ERROR
-let g:LanguageClient_waitOutputTimeout = 3 " timeout if server does not respond in 3s 
-let g:LanguageClient_serverCommands = {
-    \ 'javascript': ['javascript-typescript-stdio', '-l', '~/.vim/lsp.log'],
-    \ 'javascript.jsx': ['javascript-typescript-stdio', '-l', '~/.vim/lsp.log']
-    \ }
-
-autocmd FileType javascript setlocal completefunc=LanguageClient#complete
-nnoremap <silent> <leader>m :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> <leader>h :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <leader>fr :call LanguageClient_textDocument_references()<CR>
-nnoremap <silent> <leader>r :call LanguageClient_textDocument_rename()<CR>
-nnoremap <silent> <leader>s :call LanguageClient_textDocument_documentSymbol()<CR>
 
 " multiple windows
 set splitbelow " used by split command
@@ -242,8 +211,11 @@ let g:fzf_layout = { 'window': '10split enew' }
 nnoremap <C-p> :Files<CR> 
 "" avoid common mistake of opening fzf when saving file
 cnoremap W<CR> w<CR>
+tnoremap <a-a> <esc>a
+tnoremap <a-b> <esc>b
+tnoremap <a-d> <esc>d
+tnoremap <a-f> <esc>f
 
- 
 "" shortcut for fzf but preventing new file to open inside nerd tree buffer
 nnoremap <expr> <C-s> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Ag<space>"
 let g:fzf_action = {
@@ -273,3 +245,6 @@ let g:startify_list_order = [
 
 " Highlight keywords in comments like TODO, FIXME, WARNING, NOTE
 autocmd VimEnter * :silent! call matchadd('Todo', 'TODO\|FIXME\|WARNING\|NOTE\|Plugin:', -1)
+
+" coc earns its own config file
+source ~/.config/nvim/coc.vim
