@@ -14,11 +14,10 @@ Plug 'cocopon/iceberg.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'ryanoasis/vim-devicons'
 
-" syntax highlights 
+" syntax highlights
 Plug 'othree/html5.vim'
 Plug 'JulesWang/css.vim'
 Plug 'pangloss/vim-javascript'
-"Plug 'othree/yajs.vim' " alternative js syntax plugin, not working well for me
 Plug 'mxw/vim-jsx'
 Plug 'elzr/vim-json'
 Plug 'othree/jsdoc-syntax.vim'
@@ -35,6 +34,8 @@ Plug 'tomtom/tcomment_vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'mhinz/vim-mix-format'
+
 
 " file browser
 Plug 'scrooloose/nerdtree'
@@ -65,16 +66,16 @@ set textwidth=100
 set formatoptions=qrn1
 set colorcolumn=80 " visual indicator of 80 column
 
-" usefull stuff 
+" usefull stuff
 filetype plugin on
 set nocompatible " all in on vim
 set ttyfast " should make scrolling faster
 set lazyredraw " should make scrolling faster
 set mouse=a " we can actually resize, select and copy with the mouse
 set clipboard=unnamed " required for integration with osx clipboard
-set number  " show line numbers 
-set numberwidth=1  " show line numbers 
-set showcmd " show incomplete commands 
+set number  " show line numbers
+set numberwidth=1  " show line numbers
+set showcmd " show incomplete commands
 set laststatus=2 " always display the status line
 set autowrite " write before running commands
 set ignorecase " ignore case when searching
@@ -83,7 +84,7 @@ set noshowmode " no need to show mode, airline takes care of that
 set scrolloff=3 " display some extra lines at the bottom
 set hidden " enable hidden unsaved buffers, required for LSP rename
 set wildmenu " enable wildmenu
-set wildmode=list:longest,list:full " configure wildmenu 
+set wildmode=list:longest,list:full " configure wildmenu
 set visualbell " visual bell for errors
 set cursorline " highlight the line where the cursor is
 set cursorcolumn " highlight the column where the cursor is
@@ -105,16 +106,16 @@ set directory=~/.vim/tmp
 set termguicolors " enable true colors
 let $GIT_EDITOR = 'nvr -cc split --remote-wait'
 let $EDITOR = 'nvr -l' " prevent nested vim editors inside the temrinal
-tnoremap <silent> <leader><esc> <C-\><C-n><esc><CR> 
 nnoremap <silent> <leader>t :vertical botright Ttoggle<CR><C-w>l
-
-" git
-nnoremap <leader>g :<C-u>call gitblame#echo()<CR>
+nnoremap <silent> <leader>rf :TREPLSendFile<CR>
+nnoremap <silent> <leader>rl :TREPLSendLine<CR>
+"" leave terminal insert mode
+tnoremap <silent> <leader><esc> <C-\><C-n><esc><CR>
 
 " theme
 syntax enable " enable syntax highlight
 set background=dark " default background is dark
-colorscheme iceberg " default theme 
+colorscheme iceberg " default theme
 let g:airline_theme='iceberg' " default airline theme
 hi Comment gui=italic cterm=italic term=italic
 let g:colorizer_maxlines = 1000 " does not work well with large files
@@ -122,10 +123,10 @@ let g:javascript_plugin_jsdoc = 1
 
 " change theme to Light
 function! PresentationMode()
-    colorscheme Light
+    colorscheme Atelier_SavannaLight
     set background=light
 endfunction
-" change theme to default dark mode 
+" change theme to default dark mode
 function! NormalMode()
     set background=dark
     colorscheme iceberg
@@ -134,17 +135,19 @@ nmap <leader>PR :call PresentationMode()<CR>
 nmap <leader>PP :call NormalMode()<CR>
 
 " jsx
-"" For strict usage in jsx files 
+"" For strict usage in jsx files
+"let g:jsx_ext_required = 1
+"let g:mta_filetypes = { 'javascript.jsx' : 1 }
 "" More JSX relaxed settings
 let g:jsx_ext_required = 0
 let g:mta_filetypes = { 'javascript.jsx' : 1, 'javascript': 1 }
 
 " emmet-vim
-let g:user_emmet_leader_key='<C-e>' " Ctrl + e + (,) expands emmet
+let g:user_emmet_leader_key='<C-e>' " leader + comma(,) expands emmet
 let g:user_emmet_settings = { 'javascript.jsx' : { 'extends' : 'jsx' } }
 
 " linter
-let g:ale_linters = {'javascript': ['eslint'], 'javascript.jsx': ['eslint'], 'json': ['eslint'], 'html': ['eslint'] }
+let g:ale_linters = {'javascript': ['eslint'], 'javascript.jsx': ['eslint'], 'json': ['eslint'] }
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
 let g:airline_powerline_fonts = 1
@@ -154,18 +157,19 @@ let g:airline#extensions#tabline#enabled = 1
 " formatter
 let g:ale_fix_on_save = 1
 let g:ale_fixers = {
-      \  'javascript': ['prettier', 'eslint'],
-      \  'jsx': ['prettier', 'eslint'],
-      \  'flow': ['prettier'],
-      \  'typescript': ['prettier'],
-      \  'css': ['prettier'],
-      \  'less': ['prettier'],
-      \  'scss': ['prettier'],
-      \  'json': ['prettier'],
-      \  'graphql': ['prettier'],
-      \  'markdown': ['prettier'],
-      \  'html': ['prettier']
-             \ }
+    \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+    \  'javascript': ['prettier', 'eslint'],
+    \  'javascript.jsx': ['prettier', 'eslint'],
+    \  'jsx': ['prettier', 'eslint'],
+    \  'flow': ['prettier'],
+    \  'typescript': ['prettier'],
+    \  'css': ['prettier'],
+    \  'less': ['prettier'],
+    \  'scss': ['prettier'],
+    \  'json': ['prettier'],
+    \  'graphql': ['prettier'],
+    \  'markdown': ['prettier'],
+    \ }
 
 " file browser
 nnoremap <silent> <Leader><Space> :NERDTreeToggle<Enter>
@@ -188,7 +192,7 @@ let g:markdown_fenced_languages = ['html', 'js=javascript', 'json', 'bash=sh']
 
 " multiple windows
 set splitbelow " used by split command
-set splitright " used by vsplit command 
+set splitright " used by vsplit command
 
 " Faster move between windows using alt-dir keys
 nnoremap <C-J> <C-W><C-J>
@@ -204,22 +208,19 @@ nnoremap <m-_> :exe "resize " . (winheight(0) * 3/4)<CR>
 
 " Search/Finders
 "" clear search highlight on esc
-nnoremap <silent> <esc> :noh<return><esc> 
+nnoremap <silent> <esc> :noh<return><esc>
 let $FZF_DEFAULT_COMMAND = 'ag --ignore-case --depth -1 -g ""'
 let g:fzf_layout = { 'window': '10split enew' }
 "" makes fzf look like ctrlp replacement
-nnoremap <C-p> :Files<CR> 
+nnoremap <C-p> :Files<CR>
 "" avoid common mistake of opening fzf when saving file
 cnoremap W<CR> w<CR>
-tnoremap <a-a> <esc>a
-tnoremap <a-b> <esc>b
-tnoremap <a-d> <esc>d
-tnoremap <a-f> <esc>f
+
 
 "" shortcut for fzf but preventing new file to open inside nerd tree buffer
 nnoremap <expr> <C-s> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Ag<space>"
 let g:fzf_action = {
-    \ '': 'vsplit', 
+    \ '': 'vsplit',
     \ 'ctrl-t': 'tab split',
     \ 'ctrl-x': 'split',
     \ 'ctrl-v': 'vsplit' }
